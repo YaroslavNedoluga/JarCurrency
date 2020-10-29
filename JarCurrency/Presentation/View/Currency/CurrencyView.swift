@@ -23,6 +23,13 @@ class CurrencyViewController: MvpController<CurrencyView, CurrencyPresenter> {
     @IBOutlet weak var lLoading: UILabel!
     
     private var rates: [DRates] = []
+    private var visibleRates: [DRates] = []
+    
+    private lazy var nf: NumberFormatter = {
+        $0.numberStyle = .decimal
+        $0.maximumFractionDigits = 2
+        return $0
+    }(NumberFormatter())
     
     // MARK: MVP
     
@@ -32,17 +39,21 @@ class CurrencyViewController: MvpController<CurrencyView, CurrencyPresenter> {
     
     deinit {
         debugPrint("CurrencyViewController deint!")
+    
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tvList.register(UINib(nibName:"LogisticTariffCell", bundle: nil), forCellReuseIdentifier: "LogisticTariffCell")
+        tvList.register(UINib(nibName:"CurrencyCell", bundle: nil), forCellReuseIdentifier: "CurrencyCell")
         tvList.tableFooterView = {
             let view = UIView()
             view.backgroundColor = .white
             return view
         }()
+        
+        lTitle.text = "Currencies".toLocalizable()
+        btnLoading.setTitle("Loading.Retry", for: .normal)
         
         loadingContent()
         presenter?.loadContent()
@@ -51,46 +62,67 @@ class CurrencyViewController: MvpController<CurrencyView, CurrencyPresenter> {
     // MARK: Action
     
     @IBAction func langClicked(_ sender: Any) {
-        
+        navigationController?.pushViewController(UIStoryboard.loadSettingsView(), animated: true)
     }
     
     @IBAction func retryClicked(_ sender: Any) {
-        
+        loadingContent()
+        presenter?.loadContent()
     }
-    
-    
     
 }
 
 extension CurrencyViewController: CurrencyView {
     func contentLoaded(_ content: [DRates]) {
-        rates = content
+        rates = content.sorted(by: { $0.symbol < $1.symbol })
+        search()
         
-        
+        vLoading.isHidden = true
     }
     
     func loadingContent() {
-//        vContainer.isHidden = true
-//        vLoading.isHidden = false
-//        btnLoading.isHidden = isEmptyDataError
-//        lLoading.text = isEmptyDataError ? CustomLocalisedString("Coordination.No_data") : CustomLocalisedString("Error.Error_while_getting_info")
+        vLoading.isHidden = false
+        btnLoading.isHidden = true
+        lLoading.text = "Loading.Getting_info".toLocalizable()
     }
     
     func errorWhileLoadingContent() {
-//        vContainer.isHidden = true
-//        vLoading.isHidden = false
-//        btnLoading.isHidden = isEmptyDataError
-//        lLoading.text = isEmptyDataError ? CustomLocalisedString("Coordination.No_data") : CustomLocalisedString("Error.Error_while_getting_info")
+        vLoading.isHidden = true
+        btnLoading.isHidden = false
+        lLoading.text = "Loading.Error_while_getting_info".toLocalizable()
+    }
+    
+    // MARK: Private
+    
+    private func search(){
+        let word = sbSearch.text ?? ""
+        
+        visibleRates = rates
+            .filter {
+                if !word.isEmpty && !$0.symbol.uppercased().starts(with: word.uppercased()) { return false }
+                return true
+            }
+            .sorted(by: { $0.symbol < $1.symbol })
+        tvList.reloadData()
     }
 }
 
 extension CurrencyViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return rates.count
+        return visibleRates.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CurrencyCell", for: indexPath) as? CurrencyCell else { return UITableViewCell() }
+        cell.set(visibleRates[indexPath.row], numberFormatter: nf)
+        return cell
+    }
+}
+
+extension CurrencyViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        search()
     }
 }
 

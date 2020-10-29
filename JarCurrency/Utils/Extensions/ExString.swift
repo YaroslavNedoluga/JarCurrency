@@ -6,3 +6,14 @@
 //
 
 import Foundation
+
+extension String {
+    
+    func toData() -> Data {
+        return self.data(using: String.Encoding.utf8)!
+    }
+
+    func toLocalizable() -> String {
+        return CustomLocalisedString(self)
+    }
+}

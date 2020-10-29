@@ -9,5 +9,10 @@ struct TRates: Codable {
     let timestamp: Int64
     let base: String
     let date: String
-    let symbols: [String : Double]
+    let rates: [String : Double]
+}
+
+struct TRatesBundle {
+    let symbols: TSymbols
+    let rates: TRates
 }

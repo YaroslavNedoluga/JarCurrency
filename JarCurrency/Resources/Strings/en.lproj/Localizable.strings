@@ -5,3 +5,25 @@
   Created by Yaroslav Lutsenko on 29.10.2020.
   
 */
+
+// MARK: Currencies
+
+"Currencies" = "Currencies";
+
+// MARK: Settings
+
+"Settings.Lang" = "App Language";
+"Settings.Lang.Change" = "Change language to";
+"Settings.Lang.Reload" = "To apply the changes Daoflowers App will be restarted";
+
+// MARK: Basic
+
+"OK" = "OK";
+"Cancel" = "Cancel";
+
+//MARK: Loading
+
+"Loading.Error_while_getting_info" = "Error while getting info";
+"Loading.Retry" = "Retry";
+"Loading.Getting_info" = "Getting info…";
+
