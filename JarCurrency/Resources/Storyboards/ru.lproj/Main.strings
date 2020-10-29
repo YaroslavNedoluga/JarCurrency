@@ -1,0 +1,15 @@
+
+/* Class = "UIButton"; normalTitle = "Retry"; ObjectID = "2ae-Ev-ynJ"; */
+"2ae-Ev-ynJ.normalTitle" = "Retry";
+
+/* Class = "UILabel"; text = "Currencies"; ObjectID = "8Ov-cA-aep"; */
+"8Ov-cA-aep.text" = "Currencies";
+
+/* Class = "UILabel"; text = "Getting info"; ObjectID = "9N5-bz-aNB"; */
+"9N5-bz-aNB.text" = "Getting info";
+
+/* Class = "UILabel"; text = "Euro"; ObjectID = "Uds-zL-7m4"; */
+"Uds-zL-7m4.text" = "Euro";
+
+/* Class = "UILabel"; text = "EUR"; ObjectID = "lyp-Pq-UYQ"; */
+"lyp-Pq-UYQ.text" = "EUR";
